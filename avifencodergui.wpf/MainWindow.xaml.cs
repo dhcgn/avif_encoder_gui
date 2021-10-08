@@ -28,6 +28,7 @@ namespace avifencodergui.wpf
         {
             InitializeComponent();
 
+            // TODO Is this working?
             if (DesignerProperties.GetIsInDesignMode(this))
             {
                 var vm = this.DataContext as MainViewModel;
