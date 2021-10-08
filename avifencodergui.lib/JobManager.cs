@@ -58,12 +58,27 @@ namespace avifencodergui.lib
 
         private static string GetArguments(Job job)
         {
+            var targetFilePath = "";
             switch (job.Operation)
             {
                 case Job.OperationEnum.Encode:
-                    return $"--jobs 16 --speed 6 \"{job.FilePath}\" \"{Path.Combine(new FileInfo(job.FilePath).DirectoryName, job.FileName)}.avif\"";
+                     targetFilePath = $"{ Path.Combine(new FileInfo(job.FilePath).DirectoryName, job.FileName) }.avif";
+                    break;
                 case Job.OperationEnum.Decode:
-                    return $"--jobs 16 \"{job.FilePath}\" \"{Path.Combine(new FileInfo(job.FilePath).DirectoryName, job.FileName)}.png\"";
+                     targetFilePath = $"{ Path.Combine(new FileInfo(job.FilePath).DirectoryName, job.FileName) }.png";
+                    break;
+                default:
+                    throw new Exception($"{job.Operation} should be Encode or Decode");
+            }
+
+            job.TargetFilePath = targetFilePath;
+
+            switch (job.Operation)
+            {
+                case Job.OperationEnum.Encode:
+                    return $"--jobs 16 --speed 6 \"{job.FilePath}\" \"{job.TargetFilePath}\"";
+                case Job.OperationEnum.Decode:
+                    return $"--jobs 16 \"{job.FilePath}\" \"{job.TargetFilePath}\"";
                 default:
                     throw new Exception($"{job.Operation} should be Encode or Decode");
             }
@@ -161,12 +176,32 @@ namespace avifencodergui.lib
         public string FileName { get; init; }
         public long Length { get; init; }
         private JobStateEnum state;
-        public JobStateEnum State { get => state; internal set => base.SetProperty(ref this.state, value); }
+        private string targetFileFormattedLength;
+
+        public JobStateEnum State
+        {
+            get => state; internal set
+            {
+                base.SetProperty(ref this.state, value);
+                if (value == JobStateEnum.Done)
+                {
+                    var fi = new FileInfo(TargetFilePath);
+                    if (fi.Exists)
+                    {
+                        TargetFileLength = fi.Length;
+                        TargetFileFormattedLength = GetFormattedLength(fi.Length);
+                    }
+                }
+            }
+        }
         public FileInfo FileInfo { get; init; }
 
         public OperationEnum Operation => GetOperation(FileInfo);
 
         public string FormattedLength { get; init; }
+        public string TargetFilePath { get; internal set; }
+        public long TargetFileLength { get; internal set; }
+        public string TargetFileFormattedLength { get => targetFileFormattedLength; internal set => base.SetProperty(ref this.targetFileFormattedLength, value); }
 
         private OperationEnum GetOperation(FileInfo fileInfo)
         {
@@ -185,6 +220,18 @@ namespace avifencodergui.lib
                 default:
                     return OperationEnum.Undef;
             }
+        }
+
+        public static Job GetDesignDate()
+        {
+            return new Job
+            {
+                FileName = "pic1.png",
+                FilePath = "C:\\Users\\User\\Pictures\\pic1.png",
+                Length = 6604,
+                FormattedLength = "132 KB",
+                TargetFileFormattedLength = "80 KB",
+            };
         }
 
         public enum OperationEnum
