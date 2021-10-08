@@ -11,11 +11,11 @@
 
     >
 
-<i:Interaction.Triggers>
-    <i:EventTrigger EventName="Loaded">
-      <i:InvokeCommandAction Command="{Binding OnLoadCommand}"/>
-    </i:EventTrigger>
-  </i:Interaction.Triggers>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding OnLoadCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
 
     <Window.DataContext>
         <viewmodels:MainViewModel x:Name="ViewModel"></viewmodels:MainViewModel>
@@ -30,8 +30,8 @@
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Border Drop="Border_Drop" AllowDrop="True" PreviewDrop="Border_PreviewDrop" BorderBrush="Gray" Background="Beige" BorderThickness="0.5" Margin="20">
-            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Drop jpg, jpeg, png, y4m or avif file here"></TextBlock>
+        <Border Drop="Border_Drop" AllowDrop="True" DragOver="Border_DragOver" BorderBrush="Gray" Background="Beige" BorderThickness="0.5" Margin="20">
+            <TextBlock IsHitTestVisible="False" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Drop jpg, jpeg, png, y4m or avif file here"></TextBlock>
         </Border>
 
         <ItemsControl Grid.Row="1" ItemsSource="{Binding Jobs}" Margin="20,0,20,20">
@@ -65,7 +65,7 @@
                 <TextBlock Text="{Binding AvifEncVersion}" VerticalAlignment="Center" Padding="5,0"></TextBlock>
             </Border>
             <Border Width="5"></Border>
-            
+
             <TextBlock Text="AVIF DEC" Background="Blue" Foreground="White" FontWeight="Bold" Padding="5"></TextBlock>
             <Border BorderBrush="Blue" BorderThickness="2">
                 <TextBlock Text="{Binding AvifDecVersion}" VerticalAlignment="Center" Padding="5,0"></TextBlock>

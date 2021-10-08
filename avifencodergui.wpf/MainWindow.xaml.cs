@@ -1,4 +1,5 @@
-﻿using avifencodergui.wpf.Messenger;
+﻿using avifencodergui.lib;
+using avifencodergui.wpf.Messenger;
 using avifencodergui.wpf.ViewModels;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using System;
@@ -50,9 +51,18 @@ namespace avifencodergui.wpf
             e.Handled = true;
         }
 
-        private void Border_PreviewDrop(object sender, DragEventArgs e)
+        private void Border_DragOver(object sender, DragEventArgs e)
         {
-            e.Effects = DragDropEffects.Link;
+            e.Effects = DragDropEffects.None;
+            var droppedFileName = e.Data.GetData(DataFormats.FileDrop) as String[];
+
+            if (droppedFileName != null && droppedFileName.Any()
+                && droppedFileName.Select(f => System.IO.Path.GetExtension(f)).All(e => Constants.Extensions.Any(ee => ee == e)))
+            {
+                e.Effects = DragDropEffects.Copy | DragDropEffects.Move;
+            }
+
+            e.Handled = true;
         }
     }
 }
