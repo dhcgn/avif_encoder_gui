@@ -59,12 +59,29 @@ namespace avifencodergui.lib
 
         private static string GetArguments(Job job)
         {
-            return $"--jobs 16 --speed 6 \"{job.FilePath}\" \"{Path.Combine(new FileInfo(job.FilePath).DirectoryName,job.FileName)}.avif\"";
+            switch (job.Operation)
+            {
+                case Job.OperationEnum.Encode:
+                    return $"--jobs 16 --speed 6 \"{job.FilePath}\" \"{Path.Combine(new FileInfo(job.FilePath).DirectoryName, job.FileName)}.avif\"";
+                case Job.OperationEnum.Decode:
+                    return $"--jobs 16 \"{job.FilePath}\" \"{Path.Combine(new FileInfo(job.FilePath).DirectoryName, job.FileName)}.png\"";
+                default:
+                    throw new Exception($"{job.Operation} should be Encode or Decode");
+            }
         }
 
         private static string GetFileName(Job job)
         {
-            return ExternalAvifRessourceHandler.EcoderFilePath;
+            switch (job.Operation)
+            {
+                case Job.OperationEnum.Encode:
+                    return ExternalAvifRessourceHandler.EcoderFilePath;
+                case Job.OperationEnum.Decode:
+                    return ExternalAvifRessourceHandler.DecoderFilePath;
+                default:
+                    throw new Exception($"{job.Operation} should be Encode or Decode");
+            }
+
         }
 
         // TODO Error Handling and output
@@ -110,7 +127,7 @@ namespace avifencodergui.lib
     /// </summary>
     public class Job : ObservableObject
     {
-        
+
 
         public static Job Create(string filepath)
         {
@@ -119,7 +136,8 @@ namespace avifencodergui.lib
             {
                 FilePath = fi.FullName,
                 FileName = fi.Name,
-                Length = fi.Length
+                Length = fi.Length,
+                FileInfo = fi
             };
         }
 
@@ -128,6 +146,35 @@ namespace avifencodergui.lib
         public long Length { get; init; }
         private JobStateEnum state;
         public JobStateEnum State { get => state; internal set => base.SetProperty(ref this.state, value); }
+        public FileInfo FileInfo { get; init; }
+
+        public OperationEnum Operation => GetOperation(FileInfo);
+
+        private OperationEnum GetOperation(FileInfo fileInfo)
+        {
+            if (fileInfo == null)
+                return OperationEnum.Undef;
+
+            switch (fileInfo.Extension.ToLowerInvariant())
+            {
+                case ".avif":
+                    return OperationEnum.Decode;
+                case ".jpg":
+                case ".jpeg":
+                case ".png":
+                case ".y4m":
+                    return OperationEnum.Encode;
+                default:
+                    return OperationEnum.Undef;
+            }
+        }
+
+        public enum OperationEnum
+        {
+            Undef,
+            Encode,
+            Decode
+        }
 
         public enum JobStateEnum
         {

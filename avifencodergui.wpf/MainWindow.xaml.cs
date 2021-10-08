@@ -39,17 +39,19 @@ namespace avifencodergui.wpf
         private void Border_Drop(object sender, DragEventArgs e)
         {
             base.OnDrop(e);
-            var droppedFileName = e.Data.GetData("FileNameW") as String[];
+            var droppedFileName = e.Data.GetData(DataFormats.FileDrop) as String[];
 
             if (droppedFileName != null && droppedFileName.Any())
-                WeakReferenceMessenger.Default.Send(new FileDroppedMessage(droppedFileName[0]));
+            {
+                droppedFileName.ToList().ForEach(path => WeakReferenceMessenger.Default.Send(new FileDroppedMessage(path)));
+            }
 
             e.Handled = true;
         }
 
         private void Border_PreviewDrop(object sender, DragEventArgs e)
         {
-            
+            e.Effects = DragDropEffects.Link;
         }
     }
 }
