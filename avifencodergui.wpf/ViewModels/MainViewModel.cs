@@ -28,6 +28,8 @@ namespace avifencodergui.wpf.ViewModels
                 Jobs.Add(job);
             });
 
+            this.ShowSettingsCommand = new RelayCommand(()=> base.Messenger.Send(new WindowMessage(WindowEnum.SettingsWindows)));
+
             Jobs.Add(new Job
             {
                 FileName = "pic1.png",
@@ -54,6 +56,8 @@ namespace avifencodergui.wpf.ViewModels
 
         public String AvifEncVersion { get => avifEncVersion; set => SetProperty(ref avifEncVersion, value); }
         public String AvifDecVersion { get => avifDecVersion; set => SetProperty(ref avifDecVersion, value); }
+
+        public RelayCommand ShowSettingsCommand {  get; set; }
 
         public IAsyncRelayCommand OnLoadCommand { get; }
 

@@ -73,7 +73,7 @@
             <Border Width="5"></Border>
 
             <Button Content="Download AVIF" Margin="2" FontSize="10" Padding="5,0"></Button>
-            <Button Content="Settings" Margin="2" FontSize="10" Padding="5,0"></Button>
+            <Button Content="Settings" Margin="2" FontSize="10" Padding="5,0" Command="{Binding ShowSettingsCommand}"></Button>
         </StackPanel>
     </Grid>
 </Window>
