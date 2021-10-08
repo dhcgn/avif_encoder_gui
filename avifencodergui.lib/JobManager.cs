@@ -26,11 +26,10 @@ namespace avifencodergui.lib
 
         static async Task<int> ConsumeAsync(ISourceBlock<Job> source)
         {
-
             while (await source.OutputAvailableAsync())
             {
                 var job = await source.ReceiveAsync();
-
+                job.State = Job.JobStateEnum.Working;
                 var result = await ExecuteImageOperationAsync(job);
 
                 job.State = result.State;
@@ -137,8 +136,25 @@ namespace avifencodergui.lib
                 FilePath = fi.FullName,
                 FileName = fi.Name,
                 Length = fi.Length,
-                FileInfo = fi
+                FileInfo = fi,
+                FormattedLength = GetFormattedLength(fi.Length)
             };
+        }
+
+        private static string GetFormattedLength(double len)
+        {
+            string[] sizes = { "B", "KB", "MB", "GB", "TB" };
+            int order = 0;
+            while (len >= 1024 && order < sizes.Length - 1)
+            {
+                order++;
+                len = len / 1024;
+            }
+
+            // Adjust the format string to your preferences. For example "{0:0.#}{1}" would
+            // show a single decimal place, and no space.
+            string result = String.Format("{0:0.##} {1}", len, sizes[order]);
+            return result;
         }
 
         public string FilePath { get; init; }
@@ -149,6 +165,8 @@ namespace avifencodergui.lib
         public FileInfo FileInfo { get; init; }
 
         public OperationEnum Operation => GetOperation(FileInfo);
+
+        public string FormattedLength { get; init; }
 
         private OperationEnum GetOperation(FileInfo fileInfo)
         {
@@ -181,6 +199,7 @@ namespace avifencodergui.lib
             Pending,
             Done,
             Error,
+            Working,
         }
     }
 }

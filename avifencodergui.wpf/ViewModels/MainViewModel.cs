@@ -33,6 +33,7 @@ namespace avifencodergui.wpf.ViewModels
                 FileName = "pic1.png",
                 FilePath = "C:\\Users\\User\\Pictures\\pic1.png",
                 Length = 6604,
+                FormattedLength = "132 KB"
             });
         }
 

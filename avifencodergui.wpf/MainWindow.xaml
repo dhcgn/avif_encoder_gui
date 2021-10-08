@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:avifencodergui.wpf" xmlns:viewmodels="clr-namespace:avifencodergui.wpf.ViewModels"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="450"
+        Title="MainWindow" Height="450" Width="470"
 
 
     >
@@ -30,8 +30,8 @@
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Border Drop="Border_Drop" AllowDrop="True" PreviewDrop="Border_PreviewDrop" BorderBrush="Gray" BorderThickness="1" Margin="20">
-            <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" Background="Beige" Text="Drop [jpg|jpeg|png|y4m|avif]"></TextBlock>
+        <Border Drop="Border_Drop" AllowDrop="True" PreviewDrop="Border_PreviewDrop" BorderBrush="Gray" Background="Beige" BorderThickness="0.5" Margin="20">
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Drop jpg, jpeg, png, y4m or avif file here"></TextBlock>
         </Border>
 
         <ItemsControl Grid.Row="1" ItemsSource="{Binding Jobs}" Margin="20,0,20,20">
@@ -42,17 +42,18 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderBrush="Gray" BorderThickness="1">
+                    <Border BorderBrush="Gray" BorderThickness="0.5" Margin="2" Padding="2" Background="Beige">
                         <StackPanel>
-                            <TextBlock Text="{Binding FileName}"></TextBlock>
-                            <TextBlock Text="{Binding State}"></TextBlock>
+                            <TextBlock Text="{Binding FileName}" FontSize="8"></TextBlock>
+                            <TextBlock Text="{Binding FormattedLength}" FontSize="8"></TextBlock>
+                            <TextBlock Text="{Binding State}" FontStyle="Italic" FontSize="8"></TextBlock>
                         </StackPanel>
                     </Border>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal">
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="5">
             <TextBlock Text="APP" Background="Blue" Foreground="White" FontWeight="Bold" Padding="5"></TextBlock>
             <Border BorderBrush="Blue" BorderThickness="2">
                 <TextBlock Text="0.0.0" VerticalAlignment="Center" Padding="5,0"></TextBlock>
