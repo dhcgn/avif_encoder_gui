@@ -222,13 +222,14 @@ namespace avifencodergui.lib
             }
         }
 
-        public static Job GetDesignDate()
+        public static Job GetDesignDate(JobStateEnum state)
         {
             return new Job
             {
                 FileName = "pic1.png",
                 FilePath = "C:\\Users\\User\\Pictures\\pic1.png",
-                Length = 6604,
+                TargetFilePath= "C:\\Users\\User\\Pictures\\pic1.png.avif",
+                State = state,
                 FormattedLength = "132 KB",
                 TargetFileFormattedLength = "80 KB",
             };

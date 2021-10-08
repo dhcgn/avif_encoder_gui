@@ -13,6 +13,7 @@
 
     <Window.Resources>
         <converter:VisiblityStringAnyConverter x:Key="VisiblityStringAnyConverter" />
+        <converter:JobStatusBrushConverter x:Key="JobStatusBrushConverter" />
     </Window.Resources>
     
 
@@ -47,7 +48,7 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderBrush="Gray" BorderThickness="0.5" Margin="2" Padding="2" Background="Beige">
+                    <Border BorderBrush="Gray" BorderThickness="0.5" Margin="2" Padding="2" Background="{Binding State, Converter={StaticResource JobStatusBrushConverter}}">
                         <StackPanel>
                             <TextBlock Text="{Binding FileName}" FontSize="8"></TextBlock>
                             <StackPanel Orientation="Horizontal">

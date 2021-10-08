@@ -9,7 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows;
 
 namespace avifencodergui.wpf.ViewModels
 {
@@ -29,23 +29,25 @@ namespace avifencodergui.wpf.ViewModels
             });
 
             this.ShowSettingsCommand = new RelayCommand(()=> base.Messenger.Send(new WindowMessage(WindowEnum.SettingsWindows)));
-            Jobs.Add(Job.GetDesignDate());
+
+            if (InDesignMode())
+            {
+                Jobs.Add(Job.GetDesignDate(Job.JobStateEnum.Pending));
+                Jobs.Add(Job.GetDesignDate(Job.JobStateEnum.Working));
+                Jobs.Add(Job.GetDesignDate(Job.JobStateEnum.Done));
+                Jobs.Add(Job.GetDesignDate(Job.JobStateEnum.Error));
+            }
+        }
+
+        public static bool InDesignMode()
+        {
+            return !(Application.Current is App);
         }
 
         public ObservableCollection<Job> Jobs { get; } = new();
 
         private string avifDecVersion = "UNDEF";
         private string avifEncVersion = "UNDEF";
-
-        internal void SetDesignMode()
-        {
-            Jobs.Add(new Job
-            {
-                FileName = "pic2.png",
-                FilePath = "C:\\Users\\User\\Pictures\\pic2.png",
-                Length = 6605,
-            });
-        }
 
         public String AvifEncVersion { get => avifEncVersion; set => SetProperty(ref avifEncVersion, value); }
         public String AvifDecVersion { get => avifDecVersion; set => SetProperty(ref avifDecVersion, value); }

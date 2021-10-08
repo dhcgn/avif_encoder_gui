@@ -28,14 +28,6 @@ namespace avifencodergui.wpf
         public MainWindow()
         {
             InitializeComponent();
-
-            // TODO Is this working?
-            if (DesignerProperties.GetIsInDesignMode(this))
-            {
-                var vm = this.DataContext as MainViewModel;
-                if (vm != null)
-                    vm.SetDesignMode();
-            }
         }
 
         private void Border_Drop(object sender, DragEventArgs e)
