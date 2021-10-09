@@ -6,6 +6,7 @@ using Microsoft.Toolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ namespace avifencodergui.wpf.ViewModels
             });
 
             this.ShowSettingsCommand = new RelayCommand(()=> base.Messenger.Send(new WindowMessage(WindowEnum.SettingsWindows)));
+            this.OpenEncoderInstallWikiCommand = new RelayCommand(()=> OpenUrl("https://github.com/dhcgn/avif_encoder_gui/wiki/Install-AVIF-Encoder-and-AVIF-Decoder"));
 
             if (InDesignMode())
             {
@@ -36,6 +38,21 @@ namespace avifencodergui.wpf.ViewModels
                 Jobs.Add(Job.GetDesignDate(Job.JobStateEnum.Working));
                 Jobs.Add(Job.GetDesignDate(Job.JobStateEnum.Done));
                 Jobs.Add(Job.GetDesignDate(Job.JobStateEnum.Error));
+            }
+        }
+
+        private void OpenUrl(string url)
+        {
+            try
+            {
+                Process.Start(url);
+            }
+            catch
+            {
+                // hack because of this: https://github.com/dotnet/corefx/issues/10361
+                url = url.Replace("&", "^&");
+                Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
+               
             }
         }
 
@@ -53,6 +70,7 @@ namespace avifencodergui.wpf.ViewModels
         public String AvifDecVersion { get => avifDecVersion; set => SetProperty(ref avifDecVersion, value); }
 
         public RelayCommand ShowSettingsCommand {  get; set; }
+        public RelayCommand OpenEncoderInstallWikiCommand {  get; set; }
 
         public IAsyncRelayCommand OnLoadCommand { get; }
 

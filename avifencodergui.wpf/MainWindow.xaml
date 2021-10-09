@@ -3,12 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:avifencodergui.wpf" xmlns:viewmodels="clr-namespace:avifencodergui.wpf.ViewModels"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" xmlns:converter="clr-namespace:avifencodergui.wpf.Converter"
+        xmlns:local="clr-namespace:avifencodergui.wpf" 
+        xmlns:viewmodels="clr-namespace:avifencodergui.wpf.ViewModels"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+        xmlns:converter="clr-namespace:avifencodergui.wpf.Converter"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="470"
-
-
+        Title="avif encoder gui" Height="450" Width="470"
     >
 
     <Window.Resources>
@@ -83,7 +83,7 @@
             </Border>
             <Border Width="5"></Border>
 
-            <Button Content="Download AVIF" Margin="2" FontSize="10" Padding="5,0"></Button>
+            <Button Content="Download AVIF" Margin="2" FontSize="10" Padding="5,0" Command="{Binding OpenEncoderInstallWikiCommand}"></Button>
             <Button Content="Settings" Margin="2" FontSize="10" Padding="5,0" Command="{Binding ShowSettingsCommand}"></Button>
         </StackPanel>
     </Grid>
