@@ -12,7 +12,7 @@ namespace avifencodergui.lib
 {
     public class JobManager
     {
-        BufferBlock<Job> jobs = new BufferBlock<Job>();
+        BufferBlock<Job> jobs = new();
 
         public JobManager()
         {
@@ -95,7 +95,6 @@ namespace avifencodergui.lib
                 default:
                     throw new Exception($"{job.Operation} should be Encode or Decode");
             }
-
         }
 
         // TODO Error Handling and output
@@ -105,7 +104,6 @@ namespace avifencodergui.lib
 
             var process = new Process
             {
-                // EnableRaisingEvents = true,
                 StartInfo = { 
                     FileName = fileName, 
                     Arguments = arguments,
@@ -141,8 +139,6 @@ namespace avifencodergui.lib
     /// </summary>
     public class Job : ObservableObject
     {
-
-
         public static Job Create(string filepath)
         {
             var fi = new FileInfo(filepath);
@@ -183,7 +179,7 @@ namespace avifencodergui.lib
             get => state; internal set
             {
                 base.SetProperty(ref this.state, value);
-                if (value == JobStateEnum.Done)
+                if (value == JobStateEnum.Done && TargetFilePath != null)
                 {
                     var fi = new FileInfo(TargetFilePath);
                     if (fi.Exists)
