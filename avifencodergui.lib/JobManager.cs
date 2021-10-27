@@ -89,9 +89,9 @@ namespace avifencodergui.lib
             switch (job.Operation)
             {
                 case Job.OperationEnum.Encode:
-                    return ExternalAvifRessourceHandler.EcoderFilePath;
+                    return Constants.EncoderFilePath;
                 case Job.OperationEnum.Decode:
-                    return ExternalAvifRessourceHandler.DecoderFilePath;
+                    return Constants.DecoderFilePath;
                 default:
                     throw new Exception($"{job.Operation} should be Encode or Decode");
             }

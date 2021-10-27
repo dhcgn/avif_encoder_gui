@@ -19,7 +19,7 @@ namespace avifencodergui.wpf.ViewModels
 
         public SettingsViewModel()
         {
-            var config = avifencodergui.lib.Config.CreateSample1();
+            var config = avifencodergui.lib.Config.CreateEmpty();
             var jsonConfig = new JsonSerializerOptions
             {
                 WriteIndented = true

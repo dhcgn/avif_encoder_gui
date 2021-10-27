@@ -7,9 +7,7 @@ namespace avifencodergui.lib
 {
     public class ExternalAvifRessourceHandler
     {
-        // TODO Move to AppData
-        public static string DecoderFilePath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "avifencodergui", "avifdec.exe");
-        public static string EcoderFilePath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "avifencodergui", "avifenc.exe");
+       
 
         public class AvifFileResult
         {
@@ -27,13 +25,12 @@ namespace avifencodergui.lib
 
         public static AvifFileResult GetDecoderInformation()
         {
-            return GetFileInformation(DecoderFilePath);
+            return GetFileInformation(Constants.DecoderFilePath);
         }
 
         public static AvifFileResult GetEncoderInformation()
         {
-            return GetFileInformation(EcoderFilePath);
-
+            return GetFileInformation(Constants.EncoderFilePath);
         }
 
         private static AvifFileResult GetFileInformation(string path)

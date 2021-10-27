@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace avifencodergui.lib
@@ -13,13 +15,42 @@ namespace avifencodergui.lib
         public string Comment { get; set; }
     }
 
+
+
     public class Config
     {
+        public static Config Load()
+        {
+            if (File.Exists(Constants.ConfigPath))
+            {
+                var j = File.ReadAllText(Constants.ConfigPath);
+                var config = JsonSerializer.Deserialize<Config>(j);
+                return config;
+            }
+
+            return null;
+        }
+
+        public static void Save(Config config)
+        {
+            if (!File.Exists(Constants.AppFolder))
+            {
+                Directory.CreateDirectory(Constants.AppFolder);
+            }
+            var jsonConfig = new JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
+            var jsonString = JsonSerializer.Serialize(config, jsonConfig);
+            File.WriteAllText(Constants.ConfigPath, jsonString);
+        }
+
         public static Config CreateEmpty()
         {
             return new Config
             {
-                Jobs = new ConfigValue<int>{
+                Jobs = new ConfigValue<int>
+                {
                     Comment = "Number of jobs (worker threads, default: 1)"
                 },
                 Lossless = new ConfigValue<bool>()
@@ -153,7 +184,7 @@ the color profile of the first image supplied."
 
             return config;
         }
-    
+
         /// <summary>
         /// Number of jobs (worker threads, default: 1)
         /// </summary>
