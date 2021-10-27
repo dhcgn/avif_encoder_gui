@@ -1,40 +1,42 @@
 using Xunit;
 using FluentAssertions;
 
-namespace avifencodergui.lib.test;
-
-public class CreateProgArgs
+namespace avifencodergui.lib.test
 {
-    [Fact]
-    public void New()
+
+    public class CreateProgArgs
     {
-        var c = new Config();
+        [Fact]
+        public void New()
+        {
+            var c = new Config();
 
-        var args = c.CreateProgArgs("input.jpg", "output.avif");
+            var args = c.CreateProgArgs("input.jpg", "output.avif");
 
-        args.Should().NotBeNull();
-        args.Should().Be("\"input.jpg\" \"output.avif\"");
-    }
+            args.Should().NotBeNull();
+            args.Should().Be("\"input.jpg\" \"output.avif\"");
+        }
 
-    [Fact]
-    public void CreateEmpty()
-    {
-        var c = Config.CreateEmpty();
+        [Fact]
+        public void CreateEmpty()
+        {
+            var c = Config.CreateEmpty();
 
-        var args = c.CreateProgArgs("input.jpg", "output.avif");
+            var args = c.CreateProgArgs("input.jpg", "output.avif");
 
-        args.Should().NotBeNull();
-        args.Should().Be("\"input.jpg\" \"output.avif\"");
-    }
+            args.Should().NotBeNull();
+            args.Should().Be("\"input.jpg\" \"output.avif\"");
+        }
 
 
-    [Fact]
-    public void CreateSample1()
-    {
-        var c = Config.CreateSample1();
+        [Fact]
+        public void CreateSample1()
+        {
+            var c = Config.CreateSample1();
 
-        var args = c.CreateProgArgs("input.jpg", "output.avif");
+            var args = c.CreateProgArgs("input.jpg", "output.avif");
 
-        args.Should().NotBeNull();
+            args.Should().NotBeNull();
+        }
     }
 }
