@@ -1,5 +1,8 @@
 # avif_encoder_gui
 
+[![.NET Build](https://github.com/dhcgn/avif_encoder_gui/actions/workflows/dotnet_build.yml/badge.svg)](https://github.com/dhcgn/avif_encoder_gui/actions/workflows/dotnet_build.yml)
+[![.NET Build and Test](https://github.com/dhcgn/avif_encoder_gui/actions/workflows/dotnet_build_test.yml/badge.svg)](https://github.com/dhcgn/avif_encoder_gui/actions/workflows/dotnet_build_test.yml)
+
 **In progress**
 
 A Windows GUI Application to convert Images to the [AV1 Image File Format (AVIF)](https://en.wikipedia.org/wiki/AV1#AV1_Image_File_Format_(AVIF)).
