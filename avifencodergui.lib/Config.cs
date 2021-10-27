@@ -45,6 +45,11 @@ namespace avifencodergui.lib
             File.WriteAllText(Constants.ConfigPath, jsonString);
         }
 
+        public string CreateProgArgs(string input, string output)
+        {
+            return null;
+        }
+
         public static Config CreateEmpty()
         {
             return new Config
