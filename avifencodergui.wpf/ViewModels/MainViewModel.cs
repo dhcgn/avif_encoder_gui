@@ -100,8 +100,11 @@ namespace avifencodergui.wpf.ViewModels
                 }
             }
 
-            SetVersion((string s)=> AvifEncVersion=s, ExternalAvifRessourceHandler.GetEncoderInformation());
-            SetVersion((string s) => AvifDecVersion = s, ExternalAvifRessourceHandler.GetDecoderInformation());
+            await Task.Factory.StartNew(() =>
+            {
+                SetVersion((string s)=> AvifEncVersion=s, ExternalAvifRessourceHandler.GetEncoderInformation());
+                SetVersion((string s) => AvifDecVersion = s, ExternalAvifRessourceHandler.GetDecoderInformation());
+            });
          }
 
         private bool canEncode;
