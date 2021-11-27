@@ -8,12 +8,13 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
         xmlns:converter="clr-namespace:avifencodergui.wpf.Converter"
         mc:Ignorable="d"
-        Title="avif encoder gui" Height="450" Width="470"
+        Title="AVIF Encoder" Height="369" Width="600"
     >
 
     <Window.Resources>
         <converter:VisiblityStringAnyConverter x:Key="VisiblityStringAnyConverter" />
         <converter:JobStatusBrushConverter x:Key="JobStatusBrushConverter" />
+        <converter:VisiblityInverterConverter x:Key="VisiblityInverterConverter" />
     </Window.Resources>
     
 
@@ -36,8 +37,20 @@
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
 
+        <TextBlock Text="PREVIEW! Expect nothing!">          
+        </TextBlock>
+
         <Border Drop="Border_Drop" AllowDrop="True" DragOver="Border_DragOver" BorderBrush="Gray" Background="Beige" BorderThickness="0.5" Margin="20">
-            <TextBlock IsHitTestVisible="False" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Drop jpg, jpeg, png, y4m or avif file here"></TextBlock>
+            <StackPanel  HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock IsHitTestVisible="False" 
+                       TextAlignment="Center"
+                       Text="Drop jpg, jpeg, png, y4m or avif file here"></TextBlock>
+                <TextBlock Text="Need AVIF encoder, click 'Download AVIF' and restart!" 
+                           FontWeight="Bold"
+                           Foreground="Red"
+                           TextAlignment="Center"
+                           Visibility="{Binding CanEncode, Converter={StaticResource VisiblityInverterConverter}}"></TextBlock>
+            </StackPanel>
         </Border>
 
         <ItemsControl Grid.Row="1" ItemsSource="{Binding Jobs}" Margin="20,0,20,20">

@@ -24,6 +24,9 @@ namespace avifencodergui.wpf.ViewModels
 
             WeakReferenceMessenger.Default.Register<FileDroppedMessage>(this, (r, m) =>
             {
+                if (!this.CanEncode)
+                    return;
+
                 var job = Job.Create(m.Value);
                 jm.Add(job);
                 Jobs.Add(job);
@@ -38,6 +41,8 @@ namespace avifencodergui.wpf.ViewModels
                 Jobs.Add(Job.GetDesignDate(Job.JobStateEnum.Working));
                 Jobs.Add(Job.GetDesignDate(Job.JobStateEnum.Done));
                 Jobs.Add(Job.GetDesignDate(Job.JobStateEnum.Error));
+
+                this.CanEncode = false;
             }
         }
 
@@ -81,20 +86,26 @@ namespace avifencodergui.wpf.ViewModels
                 if (avifFileResult.Result == ExternalAvifRessourceHandler.AvifFileResultEnum.FileNotFound)
                 {
                     Set("FILE NOT FOUND");
+                    CanEncode = false;
                 }
                 else if (avifFileResult.Result == ExternalAvifRessourceHandler.AvifFileResultEnum.VersionNotReadable)
                 {
                     Set("ERROR");
+                    CanEncode = false;
                 }
                 else if (avifFileResult.Result == ExternalAvifRessourceHandler.AvifFileResultEnum.OK)
                 {
                     Set(avifFileResult.Version);
+                    CanEncode = true;
                 }
             }
 
             SetVersion((string s)=> AvifEncVersion=s, ExternalAvifRessourceHandler.GetEncoderInformation());
             SetVersion((string s) => AvifDecVersion = s, ExternalAvifRessourceHandler.GetDecoderInformation());
          }
+
+        private bool canEncode;
+        public bool CanEncode { get => canEncode; set => SetProperty(ref canEncode, value); }
     }
 
 }
