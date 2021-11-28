@@ -19,6 +19,9 @@ namespace avifencodergui.wpf.ViewModels
 
         public SettingsViewModel()
         {
+            this.SaveCommand = new RelayCommand(()=>{}, ()=>false);
+            this.CancelCommand = new RelayCommand(()=>{}, ()=>false);
+
             var config = avifencodergui.lib.Config.CreateEmpty();
             var jsonConfig = new JsonSerializerOptions
             {
