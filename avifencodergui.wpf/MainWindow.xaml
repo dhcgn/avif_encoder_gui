@@ -3,53 +3,50 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:avifencodergui.wpf" 
         xmlns:viewmodels="clr-namespace:avifencodergui.wpf.ViewModels"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:converter="clr-namespace:avifencodergui.wpf.Converter"
         mc:Ignorable="d"
-        Title="AVIF Encoder" Height="369" Width="600"
-    >
+        Title="AVIF Encoder" Height="369" Width="600">
 
     <Window.Resources>
-        <converter:VisiblityStringAnyConverter x:Key="VisiblityStringAnyConverter" />
+        <converter:VisiblityStringAnyConverter x:Key="VisibilityStringAnyConverter" />
         <converter:JobStatusBrushConverter x:Key="JobStatusBrushConverter" />
-        <converter:VisiblityInverterConverter x:Key="VisiblityInverterConverter" />
+        <converter:VisiblityInverterConverter x:Key="VisibilityInverterConverter" />
     </Window.Resources>
     
-
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding OnLoadCommand}"/>
+            <i:InvokeCommandAction Command="{Binding OnLoadCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
     <Window.DataContext>
-        <viewmodels:MainViewModel x:Name="ViewModel"></viewmodels:MainViewModel>
+        <viewmodels:MainViewModel x:Name="ViewModel" />
     </Window.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Text="PREVIEW! Expect nothing!">          
-        </TextBlock>
+        <TextBlock Text="PREVIEW! Expect nothing!" />
 
-        <Border Drop="Border_Drop" AllowDrop="True" DragOver="Border_DragOver" BorderBrush="Gray" Background="Beige" BorderThickness="0.5" Margin="20">
-            <StackPanel  HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock IsHitTestVisible="False" 
-                       TextAlignment="Center"
-                       Text="Drop jpg, jpeg, png, y4m or avif file here"></TextBlock>
-                <TextBlock Text="Need AVIF encoder, click 'Download AVIF' and restart!" 
+        <Border Grid.Row="0" Drop="Border_Drop" AllowDrop="True" DragOver="Border_DragOver" BorderBrush="Gray" Background="Beige"
+                BorderThickness="0.5" Margin="20">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock IsHitTestVisible="False"
+                           TextAlignment="Center"
+                           Text="Drop jpg, jpeg, png, y4m or avif file here" />
+                <TextBlock Text="Need AVIF encoder, click 'Download AVIF' and restart!"
                            FontWeight="Bold"
                            Foreground="Red"
                            TextAlignment="Center"
-                           Visibility="{Binding CanEncode, Converter={StaticResource VisiblityInverterConverter}}"></TextBlock>
+                           Visibility="{Binding CanEncode, Converter={StaticResource VisibilityInverterConverter}}" />
             </StackPanel>
         </Border>
 
@@ -61,16 +58,18 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderBrush="Gray" BorderThickness="0.5" Margin="2" Padding="2" Background="{Binding State, Converter={StaticResource JobStatusBrushConverter}}">
+                    <Border BorderBrush="Gray" BorderThickness="0.5" Margin="2" Padding="2"
+                            Background="{Binding State, Converter={StaticResource JobStatusBrushConverter}}">
                         <StackPanel>
-                            <TextBlock Text="{Binding FileName}" FontSize="8"></TextBlock>
+                            <TextBlock Text="{Binding FileName}" FontSize="8" />
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding FormattedLength}" FontSize="8"></TextBlock>
-                                <TextBlock Text=" -> " FontSize="8" Visibility="{Binding TargetFileFormattedLength, Converter={StaticResource VisiblityStringAnyConverter}}"></TextBlock>
-                                <TextBlock Text="{Binding TargetFileFormattedLength}" FontSize="8"></TextBlock>
+                                <TextBlock Text="{Binding FormattedLength}" FontSize="8" />
+                                <TextBlock Text=" -> " FontSize="8"
+                                           Visibility="{Binding TargetFileFormattedLength, Converter={StaticResource VisibilityStringAnyConverter}}" />
+                                <TextBlock Text="{Binding TargetFileFormattedLength}" FontSize="8" />
                             </StackPanel>
-                            
-                            <TextBlock Text="{Binding State}" FontStyle="Italic" FontSize="8"></TextBlock>
+
+                            <TextBlock Text="{Binding State}" FontStyle="Italic" FontSize="8" />
                         </StackPanel>
                     </Border>
                 </DataTemplate>
@@ -78,26 +77,27 @@
         </ItemsControl>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="5">
-            <TextBlock Text="APP" Background="Blue" Foreground="White" FontWeight="Bold" Padding="5"></TextBlock>
+            <TextBlock Text="APP" Background="Blue" Foreground="White" FontWeight="Bold" Padding="5" />
             <Border BorderBrush="Blue" BorderThickness="2">
-                <TextBlock Text="0.0.0" VerticalAlignment="Center" Padding="5,0"></TextBlock>
+                <TextBlock Text="0.0.0" VerticalAlignment="Center" Padding="5,0" />
             </Border>
-            <Border Width="5"></Border>
+            <Border Width="5" />
 
-            <TextBlock Text="AVIF ENC" Background="Blue" Foreground="White" FontWeight="Bold" Padding="5"></TextBlock>
+            <TextBlock Text="AVIF ENC" Background="Blue" Foreground="White" FontWeight="Bold" Padding="5" />
             <Border BorderBrush="Blue" BorderThickness="2">
-                <TextBlock Text="{Binding AvifEncVersion}" VerticalAlignment="Center" Padding="5,0"></TextBlock>
+                <TextBlock Text="{Binding AvifEncVersion}" VerticalAlignment="Center" Padding="5,0" />
             </Border>
-            <Border Width="5"></Border>
+            <Border Width="5" />
 
-            <TextBlock Text="AVIF DEC" Background="Blue" Foreground="White" FontWeight="Bold" Padding="5"></TextBlock>
+            <TextBlock Text="AVIF DEC" Background="Blue" Foreground="White" FontWeight="Bold" Padding="5" />
             <Border BorderBrush="Blue" BorderThickness="2">
-                <TextBlock Text="{Binding AvifDecVersion}" VerticalAlignment="Center" Padding="5,0"></TextBlock>
+                <TextBlock Text="{Binding AvifDecVersion}" VerticalAlignment="Center" Padding="5,0" />
             </Border>
-            <Border Width="5"></Border>
+            <Border Width="5" />
 
-            <Button Content="Download AVIF" Margin="2" FontSize="10" Padding="5,0" Command="{Binding OpenEncoderInstallWikiCommand}"></Button>
-            <Button Content="Settings" Margin="2" FontSize="10" Padding="5,0" Command="{Binding ShowSettingsCommand}"></Button>
+            <Button Content="Download AVIF" Margin="2" FontSize="10" Padding="5,0"
+                    Command="{Binding OpenEncoderInstallWikiCommand}" />
+            <Button Content="Settings" Margin="2" FontSize="10" Padding="5,0" Command="{Binding ShowSettingsCommand}" />
         </StackPanel>
     </Grid>
 </Window>
