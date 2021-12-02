@@ -13,12 +13,12 @@ namespace avifencodergui.lib
 
         public JobManager()
         {
-            var consumerTask = ConsumeAsync(jobs);
+            var consumerTask = ConsumeAsync(this.jobs);
         }
 
         public void Add(Job job)
         {
-            jobs.Post(job);
+            this.jobs.Post(job);
         }
 
         private static async Task<int> ConsumeAsync(ISourceBlock<Job> source)
@@ -159,17 +159,17 @@ namespace avifencodergui.lib
 
         public JobStateEnum State
         {
-            get => state;
+            get => this.state;
             internal set
             {
-                SetProperty(ref state, value);
-                if (value == JobStateEnum.Done && TargetFilePath != null)
+                this.SetProperty(ref this.state, value);
+                if (value == JobStateEnum.Done && this.TargetFilePath != null)
                 {
-                    var fi = new FileInfo(TargetFilePath);
+                    var fi = new FileInfo(this.TargetFilePath);
                     if (fi.Exists)
                     {
-                        TargetFileLength = fi.Length;
-                        TargetFileFormattedLength = GetFormattedLength(fi.Length);
+                        this.TargetFileLength = fi.Length;
+                        this.TargetFileFormattedLength = GetFormattedLength(fi.Length);
                     }
                 }
             }
@@ -177,7 +177,7 @@ namespace avifencodergui.lib
 
         public FileInfo FileInfo { get; init; }
 
-        public OperationEnum Operation => GetOperation(FileInfo);
+        public OperationEnum Operation => this.GetOperation(this.FileInfo);
 
         public string FormattedLength { get; init; }
         public string TargetFilePath { get; internal set; }
@@ -185,8 +185,8 @@ namespace avifencodergui.lib
 
         public string TargetFileFormattedLength
         {
-            get => targetFileFormattedLength;
-            internal set => SetProperty(ref targetFileFormattedLength, value);
+            get => this.targetFileFormattedLength;
+            internal set => this.SetProperty(ref this.targetFileFormattedLength, value);
         }
 
         public static Job Create(string filepath)

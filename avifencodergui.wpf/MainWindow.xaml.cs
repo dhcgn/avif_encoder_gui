@@ -14,7 +14,7 @@ namespace avifencodergui.wpf
     {
         public MainWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         private void Border_Drop(object sender, DragEventArgs e)

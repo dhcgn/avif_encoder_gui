@@ -9,7 +9,7 @@ namespace avifencodergui.wpf.Windows
     {
         public SettingsWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

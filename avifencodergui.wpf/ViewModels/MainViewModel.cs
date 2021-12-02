@@ -20,32 +20,31 @@ namespace avifencodergui.wpf.ViewModels
 
         public MainViewModel()
         {
-            OnLoadCommand = new AsyncRelayCommand(OnLoadCommandHandlingAsync);
-            var jm = new JobManager();
+            this.OnLoadCommand = new AsyncRelayCommand(this.OnLoadCommandHandlingAsync);
+            JobManager jm = new ();
 
             WeakReferenceMessenger.Default.Register<FileDroppedMessage>(this, (r, m) =>
             {
-                if (!CanEncode)
+                if (!this.CanEncode)
                     return;
 
                 var job = Job.Create(m.Value);
                 jm.Add(job);
-                Jobs.Add(job);
+                this.Jobs.Add(job);
             });
 
-            ShowSettingsCommand =
-                new RelayCommand(() => Messenger.Send(new WindowMessage(WindowEnum.SettingsWindows)));
-            OpenEncoderInstallWikiCommand = new RelayCommand(() =>
-                OpenUrl("https://github.com/dhcgn/avif_encoder_gui/wiki/Install-AVIF-Encoder-and-AVIF-Decoder"));
+            this.ShowSettingsCommand =
+                new RelayCommand(() => this.Messenger.Send(new WindowMessage(WindowEnum.SettingsWindows)));
+            this.OpenEncoderInstallWikiCommand = new RelayCommand(() => this.OpenUrl("https://github.com/dhcgn/avif_encoder_gui/wiki/Install-AVIF-Encoder-and-AVIF-Decoder"));
 
             if (InDesignMode())
             {
-                Jobs.Add(Job.GetDesignDate(Job.JobStateEnum.Pending));
-                Jobs.Add(Job.GetDesignDate(Job.JobStateEnum.Working));
-                Jobs.Add(Job.GetDesignDate(Job.JobStateEnum.Done));
-                Jobs.Add(Job.GetDesignDate(Job.JobStateEnum.Error));
+                this.Jobs.Add(Job.GetDesignDate(Job.JobStateEnum.Pending));
+                this.Jobs.Add(Job.GetDesignDate(Job.JobStateEnum.Working));
+                this.Jobs.Add(Job.GetDesignDate(Job.JobStateEnum.Done));
+                this.Jobs.Add(Job.GetDesignDate(Job.JobStateEnum.Error));
 
-                CanEncode = false;
+                this.CanEncode = false;
             }
         }
 
@@ -53,14 +52,14 @@ namespace avifencodergui.wpf.ViewModels
 
         public string AvifEncVersion
         {
-            get => avifEncVersion;
-            set => SetProperty(ref avifEncVersion, value);
+            get => this.avifEncVersion;
+            set => this.SetProperty(ref this.avifEncVersion, value);
         }
 
         public string AvifDecVersion
         {
-            get => avifDecVersion;
-            set => SetProperty(ref avifDecVersion, value);
+            get => this.avifDecVersion;
+            set => this.SetProperty(ref this.avifDecVersion, value);
         }
 
         public RelayCommand ShowSettingsCommand { get; set; }
@@ -70,8 +69,8 @@ namespace avifencodergui.wpf.ViewModels
 
         public bool CanEncode
         {
-            get => canEncode;
-            set => SetProperty(ref canEncode, value);
+            get => this.canEncode;
+            set => this.SetProperty(ref this.canEncode, value);
         }
 
         private void OpenUrl(string url)
@@ -100,24 +99,24 @@ namespace avifencodergui.wpf.ViewModels
                 if (avifFileResult.Result == ExternalAvifRessourceHandler.AvifFileResultEnum.FileNotFound)
                 {
                     Set("FILE NOT FOUND");
-                    CanEncode = false;
+                    this.CanEncode = false;
                 }
                 else if (avifFileResult.Result == ExternalAvifRessourceHandler.AvifFileResultEnum.VersionNotReadable)
                 {
                     Set("ERROR");
-                    CanEncode = false;
+                    this.CanEncode = false;
                 }
                 else if (avifFileResult.Result == ExternalAvifRessourceHandler.AvifFileResultEnum.OK)
                 {
                     Set(avifFileResult.Version);
-                    CanEncode = true;
+                    this.CanEncode = true;
                 }
             }
 
             await Task.Factory.StartNew(() =>
             {
-                SetVersion(s => AvifEncVersion = s, ExternalAvifRessourceHandler.GetEncoderInformation());
-                SetVersion(s => AvifDecVersion = s, ExternalAvifRessourceHandler.GetDecoderInformation());
+                SetVersion(s => this.AvifEncVersion = s, ExternalAvifRessourceHandler.GetEncoderInformation());
+                SetVersion(s => this.AvifDecVersion = s, ExternalAvifRessourceHandler.GetDecoderInformation());
             });
         }
     }

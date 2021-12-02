@@ -15,7 +15,7 @@ namespace avifencodergui.wpf.ViewModels
             };
             var jsonString = JsonSerializer.Serialize(config, jsonConfig);
 
-            Config = jsonString;
+            this.Config = jsonString;
         }
 
         public RelayCommand OnLoadCommand { get; set; }
