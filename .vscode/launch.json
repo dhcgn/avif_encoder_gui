@@ -12,7 +12,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/avifencodergui.wpf/bin/Debug/net5.0-windows/win-x64/avifencodergui.wpf.dll",
+            "program": "${workspaceFolder}/avifencodergui.wpf/bin/Debug/net6.0-windows/avifencodergui.wpf.exe",
             "args": [],
             "cwd": "${workspaceFolder}/avifencodergui.wpf",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
