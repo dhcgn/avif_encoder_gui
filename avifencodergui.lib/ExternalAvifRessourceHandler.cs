@@ -48,7 +48,7 @@ namespace avifencodergui.lib
         }
 
 
-        private static string? GetExecutableVersion(string path)
+        private static string GetExecutableVersion(string path)
         {
             var proc = new Process
             {
@@ -69,7 +69,7 @@ namespace avifencodergui.lib
             return ParseVersion(line);
         }
 
-        private static string? ParseVersion(string input)
+        private static string ParseVersion(string input)
         {
             var r = Regex.Match(input, @"Version: (\d{1,}.\d{1,}.\d{1,})");
             if (r.Groups.Count != 2) return null;
@@ -80,7 +80,7 @@ namespace avifencodergui.lib
         public class AvifFileResult
         {
             public AvifFileResultEnum Result { get; init; }
-            public string? Version { get; init; }
+            public string Version { get; init; }
         }
     }
 }
