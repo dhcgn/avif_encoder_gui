@@ -16,7 +16,6 @@ namespace avifencodergui.wpf.ViewModels
 {
     internal class MainViewModel : ObservableRecipient
     {
-
         public MainViewModel()
         {
             OnLoadCommand = new AsyncRelayCommand(OnLoadCommandHandlingAsync);
@@ -32,8 +31,10 @@ namespace avifencodergui.wpf.ViewModels
                 Jobs.Add(job);
             });
 
-            this.ShowSettingsCommand = new RelayCommand(()=> base.Messenger.Send(new WindowMessage(WindowEnum.SettingsWindows)));
-            this.OpenEncoderInstallWikiCommand = new RelayCommand(()=> OpenUrl("https://github.com/dhcgn/avif_encoder_gui/wiki/Install-AVIF-Encoder-and-AVIF-Decoder"));
+            this.ShowSettingsCommand =
+                new RelayCommand(() => base.Messenger.Send(new WindowMessage(WindowEnum.SettingsWindows)));
+            this.OpenEncoderInstallWikiCommand = new RelayCommand(() =>
+                OpenUrl("https://github.com/dhcgn/avif_encoder_gui/wiki/Install-AVIF-Encoder-and-AVIF-Decoder"));
 
             if (InDesignMode())
             {
@@ -56,8 +57,7 @@ namespace avifencodergui.wpf.ViewModels
             {
                 // hack because of this: https://github.com/dotnet/corefx/issues/10361
                 url = url.Replace("&", "^&");
-                Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
-               
+                Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") {CreateNoWindow = true});
             }
         }
 
@@ -71,11 +71,20 @@ namespace avifencodergui.wpf.ViewModels
         private string avifDecVersion = "UNDEF";
         private string avifEncVersion = "UNDEF";
 
-        public String AvifEncVersion { get => avifEncVersion; set => SetProperty(ref avifEncVersion, value); }
-        public String AvifDecVersion { get => avifDecVersion; set => SetProperty(ref avifDecVersion, value); }
+        public String AvifEncVersion
+        {
+            get => avifEncVersion;
+            set => SetProperty(ref avifEncVersion, value);
+        }
 
-        public RelayCommand ShowSettingsCommand {  get; set; }
-        public RelayCommand OpenEncoderInstallWikiCommand {  get; set; }
+        public String AvifDecVersion
+        {
+            get => avifDecVersion;
+            set => SetProperty(ref avifDecVersion, value);
+        }
+
+        public RelayCommand ShowSettingsCommand { get; set; }
+        public RelayCommand OpenEncoderInstallWikiCommand { get; set; }
 
         public IAsyncRelayCommand OnLoadCommand { get; }
 
@@ -102,13 +111,17 @@ namespace avifencodergui.wpf.ViewModels
 
             await Task.Factory.StartNew(() =>
             {
-                SetVersion((string s)=> AvifEncVersion=s, ExternalAvifRessourceHandler.GetEncoderInformation());
+                SetVersion((string s) => AvifEncVersion = s, ExternalAvifRessourceHandler.GetEncoderInformation());
                 SetVersion((string s) => AvifDecVersion = s, ExternalAvifRessourceHandler.GetDecoderInformation());
             });
-         }
+        }
 
         private bool canEncode;
-        public bool CanEncode { get => canEncode; set => SetProperty(ref canEncode, value); }
-    }
 
+        public bool CanEncode
+        {
+            get => canEncode;
+            set => SetProperty(ref canEncode, value);
+        }
+    }
 }

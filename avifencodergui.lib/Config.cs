@@ -16,7 +16,6 @@ namespace avifencodergui.lib
     }
 
 
-
     public class Config
     {
         public static Config Load()
@@ -37,6 +36,7 @@ namespace avifencodergui.lib
             {
                 Directory.CreateDirectory(Constants.AppFolder);
             }
+
             var jsonConfig = new JsonSerializerOptions
             {
                 WriteIndented = true
@@ -61,7 +61,8 @@ namespace avifencodergui.lib
                 Lossless = new ConfigValue<bool>()
                 {
                     Value = false,
-                    Comment = "Set all defaults to encode losslessly, and emit warnings when settings/input don't allow for it",
+                    Comment =
+                        "Set all defaults to encode losslessly, and emit warnings when settings/input don't allow for it",
                 },
                 Depth = new ConfigValue<int>()
                 {
@@ -71,7 +72,8 @@ namespace avifencodergui.lib
                 Yuv = new ConfigValue<string>()
                 {
                     Value = "",
-                    Comment = "Output format [default=444, 422, 420, 400]. (JPEG/PNG only; For y4m or stdin, format is retained)",
+                    Comment =
+                        "Output format [default=444, 422, 420, 400]. (JPEG/PNG only; For y4m or stdin, format is retained)",
                 },
                 Premultiply = new ConfigValue<bool>
                 {
@@ -80,7 +82,8 @@ namespace avifencodergui.lib
                 },
                 Range = new ConfigValue<string>
                 {
-                    Comment = "YUV range [limited or l, full or f]. (JPEG/PNG only, default: full; For y4m or stdin, range is retained)"
+                    Comment =
+                        "YUV range [limited or l, full or f]. (JPEG/PNG only, default: full; For y4m or stdin, range is retained)"
                 },
                 Min = new ConfigValue<int>
                 {
@@ -108,13 +111,15 @@ namespace avifencodergui.lib
                 },
                 Grid = new ConfigValue<int>
                 {
-                    Comment = @"Encode a single-image grid AVIF with M cols & N rows. Either supply MxN identical W/H/D images, or a single
+                    Comment =
+                        @"Encode a single-image grid AVIF with M cols & N rows. Either supply MxN identical W/H/D images, or a single
 image that can be evenly split into the MxN grid and follow AVIF grid image restrictions.The grid will adopt
 the color profile of the first image supplied."
                 },
                 Speed = new ConfigValue<int>
                 {
-                    Comment = "Encoder speed (0-10, slowest-fastest, 'default' or 'd' for codec internal defaults. default speed: 6) "
+                    Comment =
+                        "Encoder speed (0-10, slowest-fastest, 'default' or 'd' for codec internal defaults. default speed: 6) "
                 },
                 Codec = new ConfigValue<string>
                 {
@@ -124,7 +129,8 @@ the color profile of the first image supplied."
                 {
                     AdaptiveQuantizationMode = new ConfigValue<int>
                     {
-                        Comment = "Adaptive quantization mode (0: off (default), 1: variance, 2: complexity, 3: cyclic refresh)"
+                        Comment =
+                            "Adaptive quantization mode (0: off (default), 1: variance, 2: complexity, 3: cyclic refresh)"
                     },
                     ConstantOrConstrainedQualityLevel = new ConfigValue<int>
                     {
@@ -271,7 +277,6 @@ the color profile of the first image supplied."
         /// Pass an advanced, codec-specific key/value string pair directly to the codec. avifenc will warn on any not used by the codec.
         /// </summary>
         public AdvancedSwitches AdvancedSwitches { get; set; }
-
     }
 
 

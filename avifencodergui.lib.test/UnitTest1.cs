@@ -3,7 +3,6 @@ using FluentAssertions;
 
 namespace avifencodergui.lib.test
 {
-
     public class CreateProgArgs
     {
         [Fact]

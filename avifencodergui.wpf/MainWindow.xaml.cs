@@ -37,7 +37,8 @@ namespace avifencodergui.wpf
 
             if (droppedFileName != null && droppedFileName.Any())
             {
-                droppedFileName.ToList().ForEach(path => WeakReferenceMessenger.Default.Send(new FileDroppedMessage(path)));
+                droppedFileName.ToList()
+                    .ForEach(path => WeakReferenceMessenger.Default.Send(new FileDroppedMessage(path)));
             }
 
             e.Handled = true;
@@ -49,7 +50,8 @@ namespace avifencodergui.wpf
             var droppedFileName = e.Data.GetData(DataFormats.FileDrop) as String[];
 
             if (droppedFileName != null && droppedFileName.Any()
-                && droppedFileName.Select(f => System.IO.Path.GetExtension(f)).All(e => Constants.Extensions.Any(ee => ee == e)))
+                                        && droppedFileName.Select(f => System.IO.Path.GetExtension(f))
+                                            .All(e => Constants.Extensions.Any(ee => ee == e)))
             {
                 e.Effects = DragDropEffects.Copy | DragDropEffects.Move;
             }

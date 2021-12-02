@@ -62,10 +62,10 @@ namespace avifencodergui.lib
             switch (job.Operation)
             {
                 case Job.OperationEnum.Encode:
-                     targetFilePath = $"{ Path.Combine(new FileInfo(job.FilePath).DirectoryName, job.FileName) }.avif";
+                    targetFilePath = $"{Path.Combine(new FileInfo(job.FilePath).DirectoryName, job.FileName)}.avif";
                     break;
                 case Job.OperationEnum.Decode:
-                     targetFilePath = $"{ Path.Combine(new FileInfo(job.FilePath).DirectoryName, job.FileName) }.png";
+                    targetFilePath = $"{Path.Combine(new FileInfo(job.FilePath).DirectoryName, job.FileName)}.png";
                     break;
                 default:
                     throw new Exception($"{job.Operation} should be Encode or Decode");
@@ -104,10 +104,11 @@ namespace avifencodergui.lib
 
             var process = new Process
             {
-                StartInfo = { 
-                    FileName = fileName, 
+                StartInfo =
+                {
+                    FileName = fileName,
                     Arguments = arguments,
-                    WindowStyle= ProcessWindowStyle.Hidden,
+                    WindowStyle = ProcessWindowStyle.Hidden,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     CreateNoWindow = true
@@ -115,7 +116,7 @@ namespace avifencodergui.lib
                 EnableRaisingEvents = true,
             };
 
-            
+
             process.Exited += (sender, args) =>
             {
                 string line = "";
@@ -154,7 +155,7 @@ namespace avifencodergui.lib
 
         private static string GetFormattedLength(double len)
         {
-            string[] sizes = { "B", "KB", "MB", "GB", "TB" };
+            string[] sizes = {"B", "KB", "MB", "GB", "TB"};
             int order = 0;
             while (len >= 1024 && order < sizes.Length - 1)
             {
@@ -176,7 +177,8 @@ namespace avifencodergui.lib
 
         public JobStateEnum State
         {
-            get => state; internal set
+            get => state;
+            internal set
             {
                 base.SetProperty(ref this.state, value);
                 if (value == JobStateEnum.Done && TargetFilePath != null)
@@ -190,6 +192,7 @@ namespace avifencodergui.lib
                 }
             }
         }
+
         public FileInfo FileInfo { get; init; }
 
         public OperationEnum Operation => GetOperation(FileInfo);
@@ -197,7 +200,12 @@ namespace avifencodergui.lib
         public string FormattedLength { get; init; }
         public string TargetFilePath { get; internal set; }
         public long TargetFileLength { get; internal set; }
-        public string TargetFileFormattedLength { get => targetFileFormattedLength; internal set => base.SetProperty(ref this.targetFileFormattedLength, value); }
+
+        public string TargetFileFormattedLength
+        {
+            get => targetFileFormattedLength;
+            internal set => base.SetProperty(ref this.targetFileFormattedLength, value);
+        }
 
         private OperationEnum GetOperation(FileInfo fileInfo)
         {
@@ -224,7 +232,7 @@ namespace avifencodergui.lib
             {
                 FileName = "pic1.png",
                 FilePath = "C:\\Users\\User\\Pictures\\pic1.png",
-                TargetFilePath= "C:\\Users\\User\\Pictures\\pic1.png.avif",
+                TargetFilePath = "C:\\Users\\User\\Pictures\\pic1.png.avif",
                 State = state,
                 FormattedLength = "132 KB",
                 TargetFileFormattedLength = "80 KB",

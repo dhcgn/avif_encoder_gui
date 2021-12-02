@@ -7,11 +7,9 @@ namespace avifencodergui.lib
 {
     public class ExternalAvifRessourceHandler
     {
-       
-
         public class AvifFileResult
         {
-            public AvifFileResultEnum Result {  get; init; }
+            public AvifFileResultEnum Result { get; init; }
             public string? Version { get; init; }
         }
 
@@ -61,7 +59,6 @@ namespace avifencodergui.lib
         }
 
 
-
         private static string? GetExecutableVersion(string path)
         {
             var proc = new Process
@@ -77,25 +74,24 @@ namespace avifencodergui.lib
             };
 
             proc.Start();
-            string line="";
+            string line = "";
             while (!proc.StandardOutput.EndOfStream)
             {
-                line+= proc.StandardOutput.ReadLine();
+                line += proc.StandardOutput.ReadLine();
             }
-                       
+
             return ParseVersion(line);
         }
 
         private static string? ParseVersion(string input)
         {
             var r = Regex.Match(input, @"Version: (\d{1,}.\d{1,}.\d{1,})");
-            if (r.Groups.Count != 2 )
+            if (r.Groups.Count != 2)
             {
                 return null;
             }
 
             return r.Groups[1].Value;
         }
-
     }
 }

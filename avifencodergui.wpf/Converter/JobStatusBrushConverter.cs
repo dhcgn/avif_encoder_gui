@@ -14,7 +14,7 @@ namespace avifencodergui.wpf.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var converterValue = (JobStateEnum)value;
+            var converterValue = (JobStateEnum) value;
 
             switch (converterValue)
             {

@@ -14,7 +14,7 @@
         <converter:JobStatusBrushConverter x:Key="JobStatusBrushConverter" />
         <converter:VisiblityInverterConverter x:Key="VisibilityInverterConverter" />
     </Window.Resources>
-    
+
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding OnLoadCommand}" />
@@ -36,7 +36,8 @@
 
         <TextBlock Text="PREVIEW! Expect nothing!" />
 
-        <Border Grid.Row="0" Drop="Border_Drop" AllowDrop="True" DragOver="Border_DragOver" BorderBrush="Gray" Background="Beige"
+        <Border Grid.Row="0" Drop="Border_Drop" AllowDrop="True" DragOver="Border_DragOver" BorderBrush="Gray"
+                Background="Beige"
                 BorderThickness="0.5" Margin="20">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock IsHitTestVisible="False"
