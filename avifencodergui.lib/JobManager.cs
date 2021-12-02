@@ -1,18 +1,15 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace avifencodergui.lib
 {
     public class JobManager
     {
-        BufferBlock<Job> jobs = new();
+        private readonly BufferBlock<Job> jobs = new();
 
         public JobManager()
         {
@@ -24,7 +21,7 @@ namespace avifencodergui.lib
             jobs.Post(job);
         }
 
-        static async Task<int> ConsumeAsync(ISourceBlock<Job> source)
+        private static async Task<int> ConsumeAsync(ISourceBlock<Job> source)
         {
             while (await source.OutputAvailableAsync())
             {
@@ -38,11 +35,6 @@ namespace avifencodergui.lib
             return 0;
         }
 
-        private class ExecuteImageOperationResult
-        {
-            public Job.JobStateEnum State { get; internal set; }
-        }
-
         private static async Task<ExecuteImageOperationResult> ExecuteImageOperationAsync(Job job)
         {
             var filename = GetFileName(job);
@@ -50,7 +42,7 @@ namespace avifencodergui.lib
 
             var r = await RunProcessAsync(filename, arguments);
 
-            return new ExecuteImageOperationResult()
+            return new ExecuteImageOperationResult
             {
                 State = Job.JobStateEnum.Done
             };
@@ -98,7 +90,7 @@ namespace avifencodergui.lib
         }
 
         // TODO Error Handling and output
-        static Task<(int returnCode, string output)> RunProcessAsync(string fileName, string arguments)
+        private static Task<(int returnCode, string output)> RunProcessAsync(string fileName, string arguments)
         {
             var tcs = new TaskCompletionSource<(int returnCode, string output)>();
 
@@ -113,17 +105,15 @@ namespace avifencodergui.lib
                     RedirectStandardOutput = true,
                     CreateNoWindow = true
                 },
-                EnableRaisingEvents = true,
+                EnableRaisingEvents = true
             };
 
 
             process.Exited += (sender, args) =>
             {
-                string line = "";
+                var line = "";
                 while (!process.StandardOutput.EndOfStream)
-                {
                     line += process.StandardOutput.ReadLine() + Environment.NewLine;
-                }
 
                 tcs.SetResult((process.ExitCode, line));
                 process.Dispose();
@@ -133,54 +123,46 @@ namespace avifencodergui.lib
 
             return tcs.Task;
         }
+
+        private class ExecuteImageOperationResult
+        {
+            public Job.JobStateEnum State { get; internal set; }
+        }
     }
 
     /// <summary>
-    /// TODO ObservableObject should not be here
+    ///     TODO ObservableObject should not be here
     /// </summary>
     public class Job : ObservableObject
     {
-        public static Job Create(string filepath)
+        public enum JobStateEnum
         {
-            var fi = new FileInfo(filepath);
-            return new Job()
-            {
-                FilePath = fi.FullName,
-                FileName = fi.Name,
-                Length = fi.Length,
-                FileInfo = fi,
-                FormattedLength = GetFormattedLength(fi.Length)
-            };
+            Pending,
+            Done,
+            Error,
+            Working
         }
 
-        private static string GetFormattedLength(double len)
+        public enum OperationEnum
         {
-            string[] sizes = {"B", "KB", "MB", "GB", "TB"};
-            int order = 0;
-            while (len >= 1024 && order < sizes.Length - 1)
-            {
-                order++;
-                len = len / 1024;
-            }
-
-            // Adjust the format string to your preferences. For example "{0:0.#}{1}" would
-            // show a single decimal place, and no space.
-            string result = String.Format("{0:0.##} {1}", len, sizes[order]);
-            return result;
+            Undef,
+            Encode,
+            Decode
         }
+
+        private JobStateEnum state;
+        private string targetFileFormattedLength;
 
         public string FilePath { get; init; }
         public string FileName { get; init; }
         public long Length { get; init; }
-        private JobStateEnum state;
-        private string targetFileFormattedLength;
 
         public JobStateEnum State
         {
             get => state;
             internal set
             {
-                base.SetProperty(ref this.state, value);
+                SetProperty(ref state, value);
                 if (value == JobStateEnum.Done && TargetFilePath != null)
                 {
                     var fi = new FileInfo(TargetFilePath);
@@ -204,7 +186,36 @@ namespace avifencodergui.lib
         public string TargetFileFormattedLength
         {
             get => targetFileFormattedLength;
-            internal set => base.SetProperty(ref this.targetFileFormattedLength, value);
+            internal set => SetProperty(ref targetFileFormattedLength, value);
+        }
+
+        public static Job Create(string filepath)
+        {
+            var fi = new FileInfo(filepath);
+            return new Job
+            {
+                FilePath = fi.FullName,
+                FileName = fi.Name,
+                Length = fi.Length,
+                FileInfo = fi,
+                FormattedLength = GetFormattedLength(fi.Length)
+            };
+        }
+
+        private static string GetFormattedLength(double len)
+        {
+            string[] sizes = {"B", "KB", "MB", "GB", "TB"};
+            var order = 0;
+            while (len >= 1024 && order < sizes.Length - 1)
+            {
+                order++;
+                len = len / 1024;
+            }
+
+            // Adjust the format string to your preferences. For example "{0:0.#}{1}" would
+            // show a single decimal place, and no space.
+            var result = string.Format("{0:0.##} {1}", len, sizes[order]);
+            return result;
         }
 
         private OperationEnum GetOperation(FileInfo fileInfo)
@@ -235,23 +246,8 @@ namespace avifencodergui.lib
                 TargetFilePath = "C:\\Users\\User\\Pictures\\pic1.png.avif",
                 State = state,
                 FormattedLength = "132 KB",
-                TargetFileFormattedLength = "80 KB",
+                TargetFileFormattedLength = "80 KB"
             };
-        }
-
-        public enum OperationEnum
-        {
-            Undef,
-            Encode,
-            Decode
-        }
-
-        public enum JobStateEnum
-        {
-            Pending,
-            Done,
-            Error,
-            Working,
         }
     }
 }
