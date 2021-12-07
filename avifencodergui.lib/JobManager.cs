@@ -1,30 +1,27 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace avifencodergui.lib
 {
     public class JobManager
     {
-        BufferBlock<Job> jobs = new();
+        private readonly BufferBlock<Job> jobs = new();
 
         public JobManager()
         {
-            var consumerTask = ConsumeAsync(jobs);
+            var consumerTask = ConsumeAsync(this.jobs);
         }
 
         public void Add(Job job)
         {
-            jobs.Post(job);
+            this.jobs.Post(job);
         }
 
-        static async Task<int> ConsumeAsync(ISourceBlock<Job> source)
+        private static async Task<int> ConsumeAsync(ISourceBlock<Job> source)
         {
             while (await source.OutputAvailableAsync())
             {
@@ -38,11 +35,6 @@ namespace avifencodergui.lib
             return 0;
         }
 
-        private class ExecuteImageOperationResult
-        {
-            public Job.JobStateEnum State { get; internal set; }
-        }
-
         private static async Task<ExecuteImageOperationResult> ExecuteImageOperationAsync(Job job)
         {
             var filename = GetFileName(job);
@@ -50,7 +42,7 @@ namespace avifencodergui.lib
 
             var r = await RunProcessAsync(filename, arguments);
 
-            return new ExecuteImageOperationResult()
+            return new ExecuteImageOperationResult
             {
                 State = Job.JobStateEnum.Done
             };
@@ -62,10 +54,10 @@ namespace avifencodergui.lib
             switch (job.Operation)
             {
                 case Job.OperationEnum.Encode:
-                     targetFilePath = $"{ Path.Combine(new FileInfo(job.FilePath).DirectoryName, job.FileName) }.avif";
+                    targetFilePath = $"{Path.Combine(new FileInfo(job.FilePath).DirectoryName, job.FileName)}.avif";
                     break;
                 case Job.OperationEnum.Decode:
-                     targetFilePath = $"{ Path.Combine(new FileInfo(job.FilePath).DirectoryName, job.FileName) }.png";
+                    targetFilePath = $"{Path.Combine(new FileInfo(job.FilePath).DirectoryName, job.FileName)}.png";
                     break;
                 default:
                     throw new Exception($"{job.Operation} should be Encode or Decode");
@@ -98,31 +90,30 @@ namespace avifencodergui.lib
         }
 
         // TODO Error Handling and output
-        static Task<(int returnCode, string output)> RunProcessAsync(string fileName, string arguments)
+        private static Task<(int returnCode, string output)> RunProcessAsync(string fileName, string arguments)
         {
             var tcs = new TaskCompletionSource<(int returnCode, string output)>();
 
             var process = new Process
             {
-                StartInfo = { 
-                    FileName = fileName, 
+                StartInfo =
+                {
+                    FileName = fileName,
                     Arguments = arguments,
-                    WindowStyle= ProcessWindowStyle.Hidden,
+                    WindowStyle = ProcessWindowStyle.Hidden,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     CreateNoWindow = true
                 },
-                EnableRaisingEvents = true,
+                EnableRaisingEvents = true
             };
 
-            
+
             process.Exited += (sender, args) =>
             {
-                string line = "";
+                var line = "";
                 while (!process.StandardOutput.EndOfStream)
-                {
                     line += process.StandardOutput.ReadLine() + Environment.NewLine;
-                }
 
                 tcs.SetResult((process.ExitCode, line));
                 process.Dispose();
@@ -132,17 +123,76 @@ namespace avifencodergui.lib
 
             return tcs.Task;
         }
+
+        private class ExecuteImageOperationResult
+        {
+            public Job.JobStateEnum State { get; internal set; }
+        }
     }
 
     /// <summary>
-    /// TODO ObservableObject should not be here
+    ///     TODO ObservableObject should not be here
     /// </summary>
     public class Job : ObservableObject
     {
+        public enum JobStateEnum
+        {
+            Pending,
+            Done,
+            Error,
+            Working
+        }
+
+        public enum OperationEnum
+        {
+            Undef,
+            Encode,
+            Decode
+        }
+
+        private JobStateEnum state;
+        private string targetFileFormattedLength;
+
+        public string FilePath { get; init; }
+        public string FileName { get; init; }
+        public long Length { get; init; }
+
+        public JobStateEnum State
+        {
+            get => this.state;
+            internal set
+            {
+                this.SetProperty(ref this.state, value);
+                if (value == JobStateEnum.Done && this.TargetFilePath != null)
+                {
+                    var fi = new FileInfo(this.TargetFilePath);
+                    if (fi.Exists)
+                    {
+                        this.TargetFileLength = fi.Length;
+                        this.TargetFileFormattedLength = GetFormattedLength(fi.Length);
+                    }
+                }
+            }
+        }
+
+        public FileInfo FileInfo { get; init; }
+
+        public OperationEnum Operation => this.GetOperation(this.FileInfo);
+
+        public string FormattedLength { get; init; }
+        public string TargetFilePath { get; internal set; }
+        public long TargetFileLength { get; internal set; }
+
+        public string TargetFileFormattedLength
+        {
+            get => this.targetFileFormattedLength;
+            internal set => this.SetProperty(ref this.targetFileFormattedLength, value);
+        }
+
         public static Job Create(string filepath)
         {
             var fi = new FileInfo(filepath);
-            return new Job()
+            return new Job
             {
                 FilePath = fi.FullName,
                 FileName = fi.Name,
@@ -154,8 +204,8 @@ namespace avifencodergui.lib
 
         private static string GetFormattedLength(double len)
         {
-            string[] sizes = { "B", "KB", "MB", "GB", "TB" };
-            int order = 0;
+            string[] sizes = {"B", "KB", "MB", "GB", "TB"};
+            var order = 0;
             while (len >= 1024 && order < sizes.Length - 1)
             {
                 order++;
@@ -164,40 +214,9 @@ namespace avifencodergui.lib
 
             // Adjust the format string to your preferences. For example "{0:0.#}{1}" would
             // show a single decimal place, and no space.
-            string result = String.Format("{0:0.##} {1}", len, sizes[order]);
+            var result = string.Format("{0:0.##} {1}", len, sizes[order]);
             return result;
         }
-
-        public string FilePath { get; init; }
-        public string FileName { get; init; }
-        public long Length { get; init; }
-        private JobStateEnum state;
-        private string targetFileFormattedLength;
-
-        public JobStateEnum State
-        {
-            get => state; internal set
-            {
-                base.SetProperty(ref this.state, value);
-                if (value == JobStateEnum.Done && TargetFilePath != null)
-                {
-                    var fi = new FileInfo(TargetFilePath);
-                    if (fi.Exists)
-                    {
-                        TargetFileLength = fi.Length;
-                        TargetFileFormattedLength = GetFormattedLength(fi.Length);
-                    }
-                }
-            }
-        }
-        public FileInfo FileInfo { get; init; }
-
-        public OperationEnum Operation => GetOperation(FileInfo);
-
-        public string FormattedLength { get; init; }
-        public string TargetFilePath { get; internal set; }
-        public long TargetFileLength { get; internal set; }
-        public string TargetFileFormattedLength { get => targetFileFormattedLength; internal set => base.SetProperty(ref this.targetFileFormattedLength, value); }
 
         private OperationEnum GetOperation(FileInfo fileInfo)
         {
@@ -224,26 +243,11 @@ namespace avifencodergui.lib
             {
                 FileName = "pic1.png",
                 FilePath = "C:\\Users\\User\\Pictures\\pic1.png",
-                TargetFilePath= "C:\\Users\\User\\Pictures\\pic1.png.avif",
+                TargetFilePath = "C:\\Users\\User\\Pictures\\pic1.png.avif",
                 State = state,
                 FormattedLength = "132 KB",
-                TargetFileFormattedLength = "80 KB",
+                TargetFileFormattedLength = "80 KB"
             };
-        }
-
-        public enum OperationEnum
-        {
-            Undef,
-            Encode,
-            Decode
-        }
-
-        public enum JobStateEnum
-        {
-            Pending,
-            Done,
-            Error,
-            Working,
         }
     }
 }

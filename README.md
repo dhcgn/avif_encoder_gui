@@ -9,6 +9,7 @@ A Windows GUI Application to convert Images to the [AV1 Image File Format (AVIF)
 
 This is only a GUI Frontend for the official [libavif - Library for encoding and decoding .avif files](https://github.com/AOMediaCodec/libavif)
 
+![](https://f003.backblazeb2.com/file/hdev-sharex/3d9d00d3-ad4b-454c-a8b7-0870b3f58c7e/R4VrknlPDm.gif)
 
 ## Features
 
@@ -62,8 +63,3 @@ aom-specific advanced options:
     film-grain-test=TEST              : Film grain test vectors (0: none (default), 1: test-1  2: test-2, ... 16: test-16)
     film-grain-table=FILENAME         : Path to file containing film grain parameters
 ```
-
-## GUI Wireframe
-
-![image](https://user-images.githubusercontent.com/6566207/136546972-6c62e856-2d27-4d53-890c-31872407bd8f.png)
-

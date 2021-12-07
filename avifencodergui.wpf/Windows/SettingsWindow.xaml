@@ -3,31 +3,29 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:avifencodergui.wpf.Windows"
         xmlns:viewmodels="clr-namespace:avifencodergui.wpf.ViewModels"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
         Title="SettingsWindow" Height="572" Width="781">
     <Window.DataContext>
-        <viewmodels:SettingsViewModel x:Name="ViewModel"></viewmodels:SettingsViewModel>
+        <viewmodels:SettingsViewModel x:Name="ViewModel" />
     </Window.DataContext>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding OnLoadCommand}"/>
+            <i:InvokeCommandAction Command="{Binding OnLoadCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBox Padding="5" FontFamily="Consolas" FontSize="10" AcceptsReturn="True" AcceptsTab="True" ScrollViewer.VerticalScrollBarVisibility="Visible" Text="{Binding Config}" >
-
-        </TextBox>
+        <TextBox Padding="5" FontFamily="Consolas" FontSize="10" AcceptsReturn="True" AcceptsTab="True"
+                 ScrollViewer.VerticalScrollBarVisibility="Visible" Text="{Binding Config}" />
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Save" Margin="10" Padding="5" Command="{Binding SaveCommand}"></Button>
-            <Button Content="Cancel" Margin="10" Padding="5" Command="{Binding CancelCommand}"></Button>
+            <Button Content="Save" Margin="10" Padding="5" Command="{Binding SaveCommand}" />
+            <Button Content="Cancel" Margin="10" Padding="5" Command="{Binding CancelCommand}" />
         </StackPanel>
     </Grid>
 </Window>

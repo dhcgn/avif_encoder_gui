@@ -1,32 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <RootNamespace>avifencodergui.wpf</RootNamespace>
-    <UseWPF>true</UseWPF>
-    <ApplicationIcon>Assets\Logo.ico</ApplicationIcon>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <RootNamespace>avifencodergui.wpf</RootNamespace>
+        <UseWPF>true</UseWPF>
+        <ApplicationIcon>Assets\Logo.ico</ApplicationIcon>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
+        <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="Assets\Logo.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Assets\Logo.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Assets\Logo.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
-    <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\avifencodergui.lib\avifencodergui.lib.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\avifencodergui.lib\avifencodergui.lib.csproj" />
+    </ItemGroup>
 
 </Project>

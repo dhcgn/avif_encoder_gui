@@ -1,9 +1,8 @@
-using Xunit;
 using FluentAssertions;
+using Xunit;
 
 namespace avifencodergui.lib.test
 {
-
     public class CreateProgArgs
     {
         [Fact]

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace avifencodergui.lib
 {
@@ -16,9 +11,91 @@ namespace avifencodergui.lib
     }
 
 
-
     public class Config
     {
+        /// <summary>
+        ///     Number of jobs (worker threads, default: 1)
+        /// </summary>
+        public ConfigValue<int> Jobs { get; set; }
+
+        /// <summary>
+        ///     Set all defaults to encode losslessly, and emit warnings when settings/input don't allow for it
+        /// </summary>
+        public ConfigValue<bool> Lossless { get; set; }
+
+        /// <summary>
+        ///     Output depth [8,10,12]. (JPEG/PNG only; For y4m or stdin, depth is retained)
+        /// </summary>
+        public ConfigValue<int> Depth { get; set; }
+
+        /// <summary>
+        ///     Output format [default=444, 422, 420, 400]. (JPEG/PNG only; For y4m or stdin, format is retained)
+        /// </summary>
+        public ConfigValue<string> Yuv { get; set; }
+
+        /// <summary>
+        ///     Premultiply color by the alpha channel and signal this in the AVIF
+        /// </summary>
+        public ConfigValue<bool> Premultiply { get; set; }
+
+        /// <summary>
+        ///     YUV range [limited or l, full or f]. (JPEG/PNG only, default: full; For y4m or stdin, range is retained)
+        /// </summary>
+        public ConfigValue<string> Range { get; set; }
+
+        /// <summary>
+        ///     Set min quantizer for color (0-63, where 0 is lossless)
+        /// </summary>
+        public ConfigValue<int> Min { get; set; }
+
+        /// <summary>
+        ///     Set max quantizer for color (0-63, where 0 is lossless)
+        /// </summary>
+        public ConfigValue<int> Max { get; set; }
+
+        /// <summary>
+        ///     Set min quantizer for alpha (0-63, where 0 is lossless)
+        /// </summary>
+        public ConfigValue<int> MinAlpha { get; set; }
+
+        /// <summary>
+        ///     Set max quantizer for alpha (0-63, where 0 is lossless)
+        /// </summary>
+        public ConfigValue<int> MaxAlpha { get; set; }
+
+        /// <summary>
+        ///     Set log2 of number of tile rows (0-6, default: 0)
+        /// </summary>
+        public ConfigValue<int> TileRowsLog2 { get; set; }
+
+        /// <summary>
+        ///     Set log2 of number of tile columns (0-6, default: 0)
+        /// </summary>
+        public ConfigValue<int> TileColsLog2 { get; set; }
+
+        /// <summary>
+        ///     Encode a single-image grid AVIF with M cols & N rows. Either supply MxN identical W/H/D images, or a single
+        ///     image that can be evenly split into the MxN grid and follow AVIF grid image restrictions.The grid will adopt
+        ///     the color profile of the first image supplied.
+        /// </summary>
+        public ConfigValue<int> Grid { get; set; }
+
+        /// <summary>
+        ///     Encoder speed (0-10, slowest-fastest, 'default' or 'd' for codec internal defaults. default speed: 6)
+        /// </summary>
+        public ConfigValue<int> Speed { get; set; }
+
+        /// <summary>
+        ///     AV1 codec to use (choose from versions list below)
+        /// </summary>
+        public ConfigValue<string> Codec { get; set; }
+
+        /// <summary>
+        ///     Pass an advanced, codec-specific key/value string pair directly to the codec. avifenc will warn on any not used by
+        ///     the codec.
+        /// </summary>
+        public AdvancedSwitches AdvancedSwitches { get; set; }
+
         public static Config Load()
         {
             if (File.Exists(Constants.ConfigPath))
@@ -33,10 +110,8 @@ namespace avifencodergui.lib
 
         public static void Save(Config config)
         {
-            if (!File.Exists(Constants.AppFolder))
-            {
-                Directory.CreateDirectory(Constants.AppFolder);
-            }
+            if (!File.Exists(Constants.AppFolder)) Directory.CreateDirectory(Constants.AppFolder);
+
             var jsonConfig = new JsonSerializerOptions
             {
                 WriteIndented = true
@@ -58,29 +133,32 @@ namespace avifencodergui.lib
                 {
                     Comment = "Number of jobs (worker threads, default: 1)"
                 },
-                Lossless = new ConfigValue<bool>()
+                Lossless = new ConfigValue<bool>
                 {
                     Value = false,
-                    Comment = "Set all defaults to encode losslessly, and emit warnings when settings/input don't allow for it",
+                    Comment =
+                        "Set all defaults to encode losslessly, and emit warnings when settings/input don't allow for it"
                 },
-                Depth = new ConfigValue<int>()
+                Depth = new ConfigValue<int>
                 {
                     Value = 8,
-                    Comment = "Output depth [8,10,12]. (JPEG/PNG only; For y4m or stdin, depth is retained)",
+                    Comment = "Output depth [8,10,12]. (JPEG/PNG only; For y4m or stdin, depth is retained)"
                 },
-                Yuv = new ConfigValue<string>()
+                Yuv = new ConfigValue<string>
                 {
                     Value = "",
-                    Comment = "Output format [default=444, 422, 420, 400]. (JPEG/PNG only; For y4m or stdin, format is retained)",
+                    Comment =
+                        "Output format [default=444, 422, 420, 400]. (JPEG/PNG only; For y4m or stdin, format is retained)"
                 },
                 Premultiply = new ConfigValue<bool>
                 {
                     Value = false,
-                    Comment = "Premultiply color by the alpha channel and signal this in the AVIF",
+                    Comment = "Premultiply color by the alpha channel and signal this in the AVIF"
                 },
                 Range = new ConfigValue<string>
                 {
-                    Comment = "YUV range [limited or l, full or f]. (JPEG/PNG only, default: full; For y4m or stdin, range is retained)"
+                    Comment =
+                        "YUV range [limited or l, full or f]. (JPEG/PNG only, default: full; For y4m or stdin, range is retained)"
                 },
                 Min = new ConfigValue<int>
                 {
@@ -108,13 +186,15 @@ namespace avifencodergui.lib
                 },
                 Grid = new ConfigValue<int>
                 {
-                    Comment = @"Encode a single-image grid AVIF with M cols & N rows. Either supply MxN identical W/H/D images, or a single
+                    Comment =
+                        @"Encode a single-image grid AVIF with M cols & N rows. Either supply MxN identical W/H/D images, or a single
 image that can be evenly split into the MxN grid and follow AVIF grid image restrictions.The grid will adopt
 the color profile of the first image supplied."
                 },
                 Speed = new ConfigValue<int>
                 {
-                    Comment = "Encoder speed (0-10, slowest-fastest, 'default' or 'd' for codec internal defaults. default speed: 6) "
+                    Comment =
+                        "Encoder speed (0-10, slowest-fastest, 'default' or 'd' for codec internal defaults. default speed: 6) "
                 },
                 Codec = new ConfigValue<string>
                 {
@@ -124,7 +204,8 @@ the color profile of the first image supplied."
                 {
                     AdaptiveQuantizationMode = new ConfigValue<int>
                     {
-                        Comment = "Adaptive quantization mode (0: off (default), 1: variance, 2: complexity, 3: cyclic refresh)"
+                        Comment =
+                            "Adaptive quantization mode (0: off (default), 1: variance, 2: complexity, 3: cyclic refresh)"
                     },
                     ConstantOrConstrainedQualityLevel = new ConfigValue<int>
                     {
@@ -145,7 +226,7 @@ the color profile of the first image supplied."
                     Tune = new ConfigValue<string>
                     {
                         Comment = "Tune the encoder for distortion metric (psnr or ssim, default: psnr)"
-                    },
+                    }
                 }
             };
         }
@@ -189,121 +270,38 @@ the color profile of the first image supplied."
 
             return config;
         }
-
-        /// <summary>
-        /// Number of jobs (worker threads, default: 1)
-        /// </summary>
-        public ConfigValue<int> Jobs { get; set; }
-
-        /// <summary>
-        /// Set all defaults to encode losslessly, and emit warnings when settings/input don't allow for it
-        /// </summary>
-        public ConfigValue<bool> Lossless { get; set; }
-
-        /// <summary>
-        /// Output depth [8,10,12]. (JPEG/PNG only; For y4m or stdin, depth is retained)
-        /// </summary>
-        public ConfigValue<int> Depth { get; set; }
-
-        /// <summary>
-        /// Output format [default=444, 422, 420, 400]. (JPEG/PNG only; For y4m or stdin, format is retained)
-        /// </summary>
-        public ConfigValue<string> Yuv { get; set; }
-
-        /// <summary>
-        /// Premultiply color by the alpha channel and signal this in the AVIF
-        /// </summary>
-        public ConfigValue<bool> Premultiply { get; set; }
-
-        /// <summary>
-        /// YUV range [limited or l, full or f]. (JPEG/PNG only, default: full; For y4m or stdin, range is retained)
-        /// </summary>
-        public ConfigValue<string> Range { get; set; }
-
-        /// <summary>
-        /// Set min quantizer for color (0-63, where 0 is lossless)
-        /// </summary>
-        public ConfigValue<int> Min { get; set; }
-
-        /// <summary>
-        /// Set max quantizer for color (0-63, where 0 is lossless)
-        /// </summary>
-        public ConfigValue<int> Max { get; set; }
-
-        /// <summary>
-        /// Set min quantizer for alpha (0-63, where 0 is lossless)
-        /// </summary>
-        public ConfigValue<int> MinAlpha { get; set; }
-
-        /// <summary>
-        /// Set max quantizer for alpha (0-63, where 0 is lossless)
-        /// </summary>
-        public ConfigValue<int> MaxAlpha { get; set; }
-
-        /// <summary>
-        /// Set log2 of number of tile rows (0-6, default: 0)
-        /// </summary>
-        public ConfigValue<int> TileRowsLog2 { get; set; }
-
-        /// <summary>
-        /// Set log2 of number of tile columns (0-6, default: 0)
-        /// </summary>
-        public ConfigValue<int> TileColsLog2 { get; set; }
-
-        /// <summary>
-        /// Encode a single-image grid AVIF with M cols & N rows. Either supply MxN identical W/H/D images, or a single
-        /// image that can be evenly split into the MxN grid and follow AVIF grid image restrictions.The grid will adopt
-        /// the color profile of the first image supplied.
-        /// </summary>
-        public ConfigValue<int> Grid { get; set; }
-
-        /// <summary>
-        /// Encoder speed (0-10, slowest-fastest, 'default' or 'd' for codec internal defaults. default speed: 6) 
-        /// </summary>
-        public ConfigValue<int> Speed { get; set; }
-
-        /// <summary>
-        /// AV1 codec to use (choose from versions list below)
-        /// </summary>
-        public ConfigValue<string> Codec { get; set; }
-
-        /// <summary>
-        /// Pass an advanced, codec-specific key/value string pair directly to the codec. avifenc will warn on any not used by the codec.
-        /// </summary>
-        public AdvancedSwitches AdvancedSwitches { get; set; }
-
     }
 
 
     public class AdvancedSwitches
     {
         /// <summary>
-        /// Adaptive quantization mode (0: off (default), 1: variance, 2: complexity, 3: cyclic refresh)
+        ///     Adaptive quantization mode (0: off (default), 1: variance, 2: complexity, 3: cyclic refresh)
         /// </summary>
         public ConfigValue<int> AdaptiveQuantizationMode { get; set; }
 
         /// <summary>
-        /// Constant/Constrained Quality level (0-63, end-usage must be set to cq or q)
+        ///     Constant/Constrained Quality level (0-63, end-usage must be set to cq or q)
         /// </summary>
         public ConfigValue<int> ConstantOrConstrainedQualityLevel { get; set; }
 
         /// <summary>
-        /// Enable delta quantization in chroma planes (0: disable (default), 1: enable)
+        ///     Enable delta quantization in chroma planes (0: disable (default), 1: enable)
         /// </summary>
         public ConfigValue<int> EnableDeltaQuantizationInChromaPlanes { get; set; }
 
         /// <summary>
-        /// Rate control mode (vbr, cbr, cq, or q)
+        ///     Rate control mode (vbr, cbr, cq, or q)
         /// </summary>
         public ConfigValue<string> RateControlMode { get; set; }
 
         /// <summary>
-        /// Loop filter sharpness (0-7, default: 0)
+        ///     Loop filter sharpness (0-7, default: 0)
         /// </summary>
         public ConfigValue<int> LoopFilterSharpness { get; set; }
 
         /// <summary>
-        /// Tune the encoder for distortion metric (psnr or ssim, default: psnr)
+        ///     Tune the encoder for distortion metric (psnr or ssim, default: psnr)
         /// </summary>
         public ConfigValue<string> Tune { get; set; }
     }
