@@ -9,7 +9,7 @@ A Windows GUI Application to convert Images to the [AV1 Image File Format (AVIF)
 
 This is only a GUI Frontend for the official [libavif - Library for encoding and decoding .avif files](https://github.com/AOMediaCodec/libavif)
 
-![](https://f003.backblazeb2.com/file/hdev-sharex/3d9d00d3-ad4b-454c-a8b7-0870b3f58c7e/R4VrknlPDm.gif)
+![](https://s.hdev.io/e0567866-a88b-45ea-bcdc-c63bf456d4e1/R4VrknlPDm.gif)
 
 ## Features
 
