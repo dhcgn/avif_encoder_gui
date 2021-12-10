@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Documents;
 using avifencodergui.lib;
 using avifencodergui.wpf.Messenger;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
@@ -37,6 +40,9 @@ namespace avifencodergui.wpf.ViewModels
                 new RelayCommand(() => this.Messenger.Send(new WindowMessage(WindowEnum.SettingsWindows)));
             this.OpenEncoderInstallWikiCommand = new RelayCommand(() => this.OpenUrl("https://github.com/dhcgn/avif_encoder_gui/wiki/Install-AVIF-Encoder-and-AVIF-Decoder"));
 
+            this.Configs = new List<string>() {"built in"};
+            this.SelectedConfig = Configs.First();
+
             if (InDesignMode())
             {
                 this.Jobs.Add(Job.GetDesignDate(Job.JobStateEnum.Pending));
@@ -64,7 +70,8 @@ namespace avifencodergui.wpf.ViewModels
 
         public RelayCommand ShowSettingsCommand { get; set; }
         public RelayCommand OpenEncoderInstallWikiCommand { get; set; }
-
+        public List<string> Configs { get; private set; }
+        public string SelectedConfig { get;  set; }
         public IAsyncRelayCommand OnLoadCommand { get; }
 
         public bool CanEncode

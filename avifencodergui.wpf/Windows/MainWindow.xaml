@@ -7,12 +7,24 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:converter="clr-namespace:avifencodergui.wpf.Converter"
         mc:Ignorable="d"
-        Title="AVIF Encoder" Height="369" Width="600">
+        Title="AVIF Encoder" 
+        Height="369" Width="600"
+        MinHeight="369" MinWidth="600"
+        >
 
     <Window.Resources>
         <converter:VisiblityStringAnyConverter x:Key="VisibilityStringAnyConverter" />
         <converter:JobStatusBrushConverter x:Key="JobStatusBrushConverter" />
         <converter:VisiblityInverterConverter x:Key="VisibilityInverterConverter" />
+        <Style x:Key="FooterStyle" TargetType="FrameworkElement">
+            <Setter Property="FrameworkElement.Margin" Value="2" />
+            <Setter Property="Control.Padding" Value="5,2" />
+            <Setter Property="Control.FontSize" Value="10" />
+            <Setter Property="FrameworkElement.HorizontalAlignment" Value="Center" />
+            <Setter Property="FrameworkElement.VerticalAlignment" Value="Center" />
+            <Setter Property="Control.HorizontalContentAlignment" Value="Center" />
+            <Setter Property="Control.VerticalContentAlignment" Value="Center" />
+        </Style>
     </Window.Resources>
 
     <i:Interaction.Triggers>
@@ -96,9 +108,12 @@
             </Border>
             <Border Width="5" />
 
-            <Button Content="Download AVIF" Margin="2" FontSize="10" Padding="5,0"
+            <Button Content="Download AVIF" Style="{StaticResource FooterStyle}"
                     Command="{Binding OpenEncoderInstallWikiCommand}" />
-            <Button Content="Settings" Margin="2" FontSize="10" Padding="5,0" Command="{Binding ShowSettingsCommand}" />
+            <Button Content="Settings" Style="{StaticResource FooterStyle}" Command="{Binding ShowSettingsCommand}" />
+            <TextBlock Text="Selected:" Style="{StaticResource FooterStyle}" />
+            <ComboBox ItemsSource="{Binding Configs}" Style="{StaticResource FooterStyle}"
+                      SelectedItem="{Binding SelectedConfig}" />
         </StackPanel>
     </Grid>
 </Window>
