@@ -35,7 +35,7 @@ namespace avifencodergui.wpf
             var droppedFileName = e.Data.GetData(DataFormats.FileDrop) as string[];
 
             if (droppedFileName != null && droppedFileName.Any()
-                                        && droppedFileName.Select(f => Path.GetExtension(f))
+                                        && droppedFileName.Select(f => Path.GetExtension(f).ToLower())
                                             .All(e => Constants.Extensions.Any(ee => ee == e)))
                 e.Effects = DragDropEffects.Copy | DragDropEffects.Move;
 
