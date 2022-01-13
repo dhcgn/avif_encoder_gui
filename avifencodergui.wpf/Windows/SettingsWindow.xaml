@@ -22,10 +22,10 @@
         </Grid.RowDefinitions>
 
         <TextBox Padding="5" FontFamily="Consolas" FontSize="10" AcceptsReturn="True" AcceptsTab="True"
-                 ScrollViewer.VerticalScrollBarVisibility="Visible" Text="{Binding Config}" />
+                 ScrollViewer.VerticalScrollBarVisibility="Visible" Text="{Binding ConfigJsonText}" />
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
             <TextBlock Text="Selected Settings"></TextBlock>
-            <ComboBox></ComboBox>
+            <ComboBox ItemsSource="{Binding Configs}" SelectedValue="{Binding SelectedConfig}" DisplayMemberPath="Name"></ComboBox>
             <Button Content="Refesh" Margin="10" Padding="10,5" Command="{Binding SaveCommand}" />
             <Button Content="Open folder" Margin="10" Padding="10,5" Command="{Binding SaveCommand}" />
             <Button Content="Save" Margin="10" Padding="10,5" Command="{Binding SaveCommand}" />

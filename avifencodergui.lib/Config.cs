@@ -108,7 +108,7 @@ namespace avifencodergui.lib
             return null;
         }
 
-        public static void Save(Config config)
+        public static void Save(Config config, string name)
         {
             if (!File.Exists(Constants.AppFolder)) Directory.CreateDirectory(Constants.AppFolder);
 
@@ -117,8 +117,10 @@ namespace avifencodergui.lib
                 WriteIndented = true
             };
             var jsonString = JsonSerializer.Serialize(config, jsonConfig);
-            File.WriteAllText(Constants.ConfigPath, jsonString);
+            var file = Path.Combine(Constants.AppFolder, $"{name}.config.json");
+            File.WriteAllText(file, jsonString);
         }
+
 
         public string CreateProgArgs(string input, string output)
         {
